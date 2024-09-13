@@ -11,7 +11,7 @@ services:
     env_file:
       - .env
     volumes:
-      - /home/sramis-c/42/data/:/var/www/wordpress
+      - /home/sramis-c/42/data/:/var/www/html
     networks:
       - wordpress_net
 
@@ -22,7 +22,7 @@ services:
     ports:
       - "9000:9000"  # Expose port for PHP-FPM
     volumes:
-      - wordpress_data:/var/www/wordpress
+      - wordpress_data:/var/www/html
     networks:
       - wordpress_net
 

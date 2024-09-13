@@ -9,8 +9,13 @@ RUN apt-get update && apt-get install -y \
     unzip \
     && apt-get clean
 
+COPY ./tools/init.sh /usr/bin/init.sh
+
+RUN chmod -R 755 /usr/bin/init.sh
+
 # Create the /var/www/html directory
-RUN mkdir -p /var/www/html
+RUN mkdir -p /var/www/html && \
+    chmod -R 755 /var/www/html
 
 # Download and install WordPress
 RUN curl -O https://wordpress.org/latest.tar.gz \
@@ -26,4 +31,4 @@ RUN curl -O https://wordpress.org/latest.tar.gz \
 EXPOSE 9000
 
 # Start PHP-FPM
-CMD ["php-fpm8.2", "-F"]
+CMD ["/usr/bin/init.sh"]

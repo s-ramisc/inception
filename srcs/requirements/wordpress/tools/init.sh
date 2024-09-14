@@ -1,10 +1,6 @@
 #!/bin/sh
 
-until nc -z -v -w30 $MYSQL_DATABASE_HOST 3306
-do
-  echo "Waiting for database..."
-  sleep 5
-done
+sleep 10
 
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
@@ -25,10 +21,7 @@ if [ ! -e /var/www/wordpress/user_created.txt ]; then
 fi
 
 if [ ! -e /var/www/wordpress/home_page_created.txt ]; then
-  wp core install  --url=$DOMAIN_NAME --title=Inception --admin_user=$WP_ADMIN --admin_password=$WP_ADMIN_PASSWORD --admin_email="$WP_ADMIN_MAIL" --path=/var/www/wordpress
-  wp user create $WP_USER $WP_USER_MAIL --role=editor --user_pass=$WP_USER_PASSWORD --path=/var/www/wordpress
+  wp core install --allow-root --url=$DOMAIN_NAME --title=Inception --admin_user=$WP_ADMIN --admin_password=$WP_ADMIN_PASSWORD --admin_email="$WP_ADMIN_MAIL" --path=/var/www/wordpress
+  wp user create --allow-root $WP_USER $WP_USER_MAIL --role=editor --user_pass=$WP_USER_PASSWORD --path=/var/www/wordpress
   touch /var/www/wordpress/home_page_created.txt
 fi
-
-
-php-fpm82 --nodaemonize 

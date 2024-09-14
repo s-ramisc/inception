@@ -11,18 +11,24 @@ services:
     env_file:
       - .env
     volumes:
-      - /home/sramis-c/42/data/:/var/www/html
+      - wordpress_data:/var/www/
     networks:
       - wordpress_net
+    restart:
+      on-failure
+    depends_on:
+     - wordpress
+
 
   wordpress:
     build:
       context: requirements/wordpress
       dockerfile: Dockerfile
+    env_file: ".env"
     ports:
       - "9000:9000"  # Expose port for PHP-FPM
     volumes:
-      - wordpress_data:/var/www/html
+      - wordpress_data:/var/www/
     networks:
       - wordpress_net
 

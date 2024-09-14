@@ -10,7 +10,8 @@ RUN mkdir /etc/nginx/certs
 COPY conf/nginx.conf /etc/nginx/nginx.conf
 
 RUN mkdir -p /var/www/wordpress
-	#chown -R nginx:nginx /var/www/wordpress
+
+RUN chown -R www-data:www-data /var/www/wordpress
 
 # Generate a self-signed SSL certificate
 RUN openssl genrsa -out /etc/nginx/certs/server.key 2048 && \

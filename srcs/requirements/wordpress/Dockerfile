@@ -28,12 +28,12 @@ RUN wget https://wordpress.org/wordpress-6.4.tar.gz && \
 
 
 # Set permissions
-#RUN chown -R www-data:www-data /var/www/wordpress \
-#    && chmod -R 755 /var/www/wordpress
+RUN chown -R www-data:www-data /var/www/wordpress
+RUN chmod -R 755 /var/www/wordpress
+
 
 # Expose port 9000 for PHP-FPM
 #EXPOSE 9000
 
 # Start PHP-FPM
-CMD ["/usr/bin/init.sh"]
-CMD ["php-fpm8.2", "--nodaemonize"]
+ENTRYPOINT ["/usr/bin/init.sh"]

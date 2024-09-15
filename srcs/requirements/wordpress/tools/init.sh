@@ -1,6 +1,10 @@
-#!/bin/sh
+#!/bin/bash
 
-sleep 10
+echo "Waiting for database to be ready..."
+until nc -z -v -w30 $MYSQL_DATABASE_HOST 3306; do
+  echo "Waiting for database..."
+  sleep 5
+done
 
 curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
 chmod +x wp-cli.phar
@@ -25,3 +29,5 @@ if [ ! -e /var/www/wordpress/home_page_created.txt ]; then
   wp user create --allow-root $WP_USER $WP_USER_MAIL --role=editor --user_pass=$WP_USER_PASSWORD --path=/var/www/wordpress
   touch /var/www/wordpress/home_page_created.txt
 fi
+
+exec php-fpm8.2 -F

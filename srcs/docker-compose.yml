@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3'
 
 services:
 
@@ -31,17 +31,24 @@ services:
       - wordpress_data:/var/www/
     networks:
       - wordpress_net
+    depends_on:
+      - mariadb
 
   mariadb:
     build:
       context: requirements/mariadb
       dockerfile: Dockerfile
     env_file: ".env"
+    #enviorement:
+     # MYSQL_ROOT_PASSWORD: root_password
+      #MYSQL_DATABASE_NAME: my_database
+      #MYSQL_USER: my_user
+      #MYSQL_PASSWORD: my_password
     ports:
       - "3306:3306"  # Expose port for MariaDB
     volumes:
       - mariadb_data:/var/lib/mysql
-      - ./requirements/mariadb/conf/init.sh:/init.sh
+      #- ./requirements/mariadb/conf/init.sh:/init.sh
     networks:
       - wordpress_net
     #restart: on-failure

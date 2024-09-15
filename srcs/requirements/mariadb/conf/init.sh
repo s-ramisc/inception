@@ -1,21 +1,33 @@
-#!/bin/sh
+#! /bin/sh
+
+print_log() {
+  echo "[ MARIADB ]: $1"
+}
+
+function add_query_line {
+  echo "$1" >> "$MYSQL_INIT_FILE"
+}
 
 chown -R mysql: /var/lib/mysql
-chmod 777 /var/lib/mysql 
+chmod 777 /var/lib/mysql
 
-if [ ! -d "/var/lib/mysql/${MYSQL_DATABASE_NAME}" ]; then
-    /etc/init.d/mariadb setup
-fi
+mysql_install_db >/dev/null 2>&1
 
-sleep 10
-
-if [ ! -d "/var/lib/mysql/${MYSQL_DATABASE_NAME}" ]; then
-    mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE_NAME;"
-    mysql -e "CREATE USER IF NOT EXISTS '$MYSQL_USER'@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
-    mysql -e "CREATE USER IF NOT EXISTS $MYSQL_USER@'localhost' IDENTIFIED BY '$MYSQL_PASSWORD';"
-    mysql -e "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE_NAME.* TO $MYSQL_USER@'localhost' WITH GRANT OPTION;"
-    mysql -e "GRANT ALL PRIVILEGES ON *.* TO '$MYSQL_USER'@'%';"
-    mysql -uroot -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '${MYSQL_ROOT_PASSWORD}';"
-    mysql -e "FLUSH PRIVILEGES;"
-
+if [ ! -d "/var/lib/mysql/$MYSQL_DATABASE_NAME" ]; then
+  rm -f "$MYSQL_INIT_FILE"
+  add_query_line "CREATE DATABASE $MYSQL_DATABASE_NAME;"
+  add_query_line "CREATE USER $MYSQL_USER@'%' IDENTIFIED BY '$MYSQL_PASSWORD';"
+  add_query_line "CREATE USER $MYSQL_USER@'localhost' IDENTIFIED BY '$MYSQL_PASSWORD';"
+  add_query_line "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE_NAME.* TO $MYSQL_USER@'%' WITH GRANT OPTION;"
+  add_query_line "GRANT ALL PRIVILEGES ON $MYSQL_DATABASE_NAME.* TO $MYSQL_USER@'localhost' WITH GRANT OPTION;"
+  add_query_line "FLUSH PRIVILEGES;"
+  add_query_line "DROP USER 'root'@'localhost';"
+  add_query_line "CREATE USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';"
+  add_query_line "GRANT ALL PRIVILEGES ON *.* TO 'root'@'localhost' WITH GRANT OPTION;"
+  add_query_line "FLUSH PRIVILEGES;"
+  print_log "Starting MariDB server..."
+  mysqld_safe --init-file=$MYSQL_INIT_FILE >/dev/null 2>&1
+else
+  print_log "Starting MariDB server..."
+  mysqld_safe >/dev/null 2>&1
 fi

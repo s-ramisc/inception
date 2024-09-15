@@ -1,24 +1,14 @@
-# Use the official Debian image as the base
-FROM debian:bullseye-slim
+FROM alpine:3.18.3
 
-# Install MariaDB server and necessary packages
-RUN apt-get update && \
-    apt-get install -y \
-    mariadb-server \
-    && apt-get clean && rm -rf /var/lib/apt/lists/*
+RUN apk update && apk add mariadb mariadb-client
 
-# Copy custom MariaDB configuration file
-COPY conf/my.cnf /etc/mysql/my.cnf
+COPY ./conf/my.cnf /etc/mysql/my.cnf
+COPY ./conf/my.cnf /etc/my.cnf
+COPY ./conf/mariadb-server.cnf /etc/my.cnf.d/mariadb-server.cnf
+COPY ./conf/init.sh ./tools/init.sh
 
-# Make sure init.sh is executable
-# COPY conf/init.sh .
-# RUN chmod 777 init.sh
+RUN mkdir /var/log/mysql
 
-# Expose port 3306 for MariaDB
-EXPOSE 3306
+RUN chmod +x ./tools/init.sh
 
-# Start MariaDB service
-CMD ["/init.sh"]
-CMD ["mysqld_safe"]
-
-
+CMD ["./tools/init.sh"]

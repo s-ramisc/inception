@@ -7,7 +7,7 @@ services:
       context: requirements/nginx
       dockerfile: Dockerfile
     ports:
-      - "8443:443"
+      - "443:443"
     env_file:
       - .env
     volumes:
@@ -41,12 +41,13 @@ services:
       - "3306:3306"  # Expose port for MariaDB
     volumes:
       - mariadb_data:/var/lib/mysql
-      - ./requirements/mariadb/conf/init.sh:/init.sh
+      - ./requirements/mariadb/tools/init.sh:/init.sh
     networks:
       - wordpress_net
     #restart: on-failure
 
-
+#te falta poner las rutas
+# /home/login/data
 volumes:
   wordpress_data:
   mariadb_data:

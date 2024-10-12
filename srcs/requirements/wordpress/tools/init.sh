@@ -16,8 +16,8 @@ if [ ! -e /var/www/wordpress/wp-config.php ]; then
       -e "s/password_here/$MYSQL_PASSWORD/" \
       -e "s/localhost/$MYSQL_DATABASE_HOST/" \
       /var/www/wordpress/wp-config-sample.php > /var/www/wordpress/wp-config.php && \
-      echo "define('WP_HOME', 'https://localhost:8443');" >> /var/www/wordpress/wp-config.php && \
-      echo "define('WP_SITEURL', 'https://localhost:8443');" >> /var/www/wordpress/wp-config.php
+      echo "define('WP_HOME', 'https://sramis-c.42.fr:443');" >> /var/www/wordpress/wp-config.php && \
+      echo "define('WP_SITEURL', 'https://sramis-c.42.fr:443');" >> /var/www/wordpress/wp-config.php
 
   curl -s https://api.wordpress.org/secret-key/1.1/salt/ >> /var/www/wordpress/wp-config.php
 fi

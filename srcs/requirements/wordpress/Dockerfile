@@ -1,4 +1,4 @@
-FROM debian:latest
+FROM debian:bullseye-slim
 
 # Install necessary packages
 RUN apt-get update && apt-get install -y \

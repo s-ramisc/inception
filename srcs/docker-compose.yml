@@ -11,13 +11,13 @@ services:
     env_file:
       - .env
     volumes:
-      - wordpress_data:/var/www/
+      - wordpress_data:/var/www/wordpress
     networks:
       - wordpress_net
     restart:
-      on-failure
+       on-failure
     depends_on:
-     - wordpress
+      - wordpress
 
 
   wordpress:
@@ -28,7 +28,7 @@ services:
     ports:
       - "9000:9000"  # Expose port for PHP-FPM
     volumes:
-      - wordpress_data:/var/www/
+      - wordpress_data:/var/www/wordpress
     networks:
       - wordpress_net
 

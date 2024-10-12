@@ -6,7 +6,7 @@ RUN apt-get update && apt-get install -y \
     php-mysql \
     curl \
     netcat-openbsd \
-    wget 
+    wget
 
 COPY ./tools/init.sh /usr/bin/init.sh
 
@@ -18,22 +18,14 @@ RUN chmod -R 755 /usr/bin/init.sh
 RUN mkdir -p /var/www/wordpress && \
     chmod -R 755 /var/www/wordpress
 
-#RUN wget https://wordpress.org/wordpress-6.4.tar.gz && \
-#    tar -xzvf wordpress-6.4.tar.gz -C /var/www/ && \
-#	rm wordpress-6.4.tar.gz
 # Download and install WordPress
 RUN wget https://wordpress.org/wordpress-6.4.tar.gz && \
     tar -xzvf wordpress-6.4.tar.gz -C /var/www/ && \
 	rm wordpress-6.4.tar.gz
 
-
 # Set permissions
-#RUN chown -R www-data:www-data /var/www/wordpress \
-#    && chmod -R 755 /var/www/wordpress
-
-# Expose port 9000 for PHP-FPM
-#EXPOSE 9000
+RUN chown -R www-data:www-data /var/www/wordpress \
+    && chmod -R 755 /var/www/wordpress
 
 # Start PHP-FPM
 CMD ["/usr/bin/init.sh"]
-CMD ["php-fpm8.2", "--nodaemonize"]

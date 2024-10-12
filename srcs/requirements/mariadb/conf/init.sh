@@ -1,13 +1,9 @@
 #!/bin/sh
 
-chown -R mysql: /var/lib/mysql
-chmod 777 /var/lib/mysql 
+chown -R mysql:mysql /var/lib/mysql
 
-if [ ! -d "/var/lib/mysql/${MYSQL_DATABASE_NAME}" ]; then
-    /etc/init.d/mariadb setup
-fi
-
-sleep 10
+mysqld_safe --skip-networking &
+sleep 5  # Give it a few seconds to start
 
 if [ ! -d "/var/lib/mysql/${MYSQL_DATABASE_NAME}" ]; then
     mysql -e "CREATE DATABASE IF NOT EXISTS $MYSQL_DATABASE_NAME;"
@@ -19,3 +15,6 @@ if [ ! -d "/var/lib/mysql/${MYSQL_DATABASE_NAME}" ]; then
     mysql -e "FLUSH PRIVILEGES;"
 
 fi
+mysqladmin -uroot -p${MYSQL_ROOT_PASSWORD} shutdown
+
+exec mysqld_safe 

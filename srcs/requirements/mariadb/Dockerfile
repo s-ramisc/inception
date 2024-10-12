@@ -19,6 +19,6 @@ EXPOSE 3306
 
 # Start MariaDB service
 CMD ["/init.sh"]
-CMD ["mysqld_safe"]
+#CMD ["mysqld_safe"]
 
 

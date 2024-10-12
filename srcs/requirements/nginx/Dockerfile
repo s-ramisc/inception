@@ -15,10 +15,10 @@ RUN chown -R www-data:www-data /var/www/wordpress
 
 # Generate a self-signed SSL certificate
 RUN openssl genrsa -out /etc/nginx/certs/server.key 2048 && \
-    openssl req -new -x509 -key /etc/nginx/certs/server.key -out /etc/nginx/certs/server.crt -days 365 -subj "/CN=sramis-c.42.fr"
+    openssl req -new -x509 -key /etc/nginx/certs/server.key -out /etc/nginx/certs/server.crt -days 365 -subj "/CN=localhost"
 
 # Expose port 443 for HTTPS
-#EXPOSE 443
+EXPOSE 443
 
 # Start NGINX in the foreground
 CMD ["nginx", "-g", "daemon off;"]
